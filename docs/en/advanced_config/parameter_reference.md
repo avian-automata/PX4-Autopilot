@@ -28154,7 +28154,7 @@ Reboot | minValue | maxValue | increment | default | unit | Read-Only
 
 ## Commander
 
-<div class="param-group" style="--param-count: 75">
+<div class="param-group" style="--param-count: 74">
 
 <div class="param">
 
@@ -28985,29 +28985,6 @@ Reboot | minValue | maxValue | increment | default | unit | Read-Only
 
 <div class="param">
 
-### COM_FLTT_LOW_ACT (`INT32`) {#COM_FLTT_LOW_ACT}
-
-Remaining flight time low failsafe.
-
-Action the system takes when the remaining flight time is below
-the estimated time it takes to reach the return destination.
-
-
-**Values:**
-
-- `0`: None
-- `1`: Warning
-- `3`: Return
-
-
-Reboot | minValue | maxValue | increment | default | unit | Read-Only
---- | --- | --- | --- | --- | --- | ---
-&nbsp; |  |  | 1 | 1 |  | &nbsp;
-
-</div>
-
-<div class="param">
-
 ### COM_FLT_TIME_MAX (`INT32`) {#COM_FLT_TIME_MAX}
 
 Maximum allowed flight time.
@@ -29142,16 +29119,21 @@ Reboot | minValue | maxValue | increment | default | unit | Read-Only
 
 Battery failsafe mode.
 
-Action the system takes at critical battery. See also BAT_CRIT_THR and BAT_EMERGEN_THR
-for definition of battery states.
+Action when the battery drops below the critical (BAT_CRIT_THR) or emergency (BAT_EMERGEN_THR) level.
+
+Options 3 and 4 also engage Return mode when the remaining flight time is only just enough to return (distance-aware return, with the margin set by RTL_TIME_FACTOR and RTL_TIME_MARGIN).
+This needs a remaining flight time estimate, such as from BATn_CAPACITY or a smart battery.
+The other options only warn.
 
 
 **Values:**
 
 - `0`: Warning
 - `2`: Land mode
-- `3`: Return at critical level, land at emergency level
-- `4`: Return at critical level, terminate at emergency level
+- `3`: Distance-aware return, Critical level return, Emergency level land
+- `4`: Distance-aware return, Critical level return, Emergency level terminate
+- `5`: Critical level return, Emergency level land
+- `6`: Critical level return, Emergency level terminate
 
 
 Reboot | minValue | maxValue | increment | default | unit | Read-Only
@@ -35684,7 +35666,7 @@ Reboot | minValue | maxValue | increment | default | unit | Read-Only
 
 Altitude loss threshold for termination and parachute deployment.
 
-Maximum altitude loss below the setpoint allowed before the vehicle terminates and deploys the parachute. Set to 0 to disable.
+Maximum altitude loss allowed before the vehicle terminates and deploys the parachute. Set to 0 to disable.
 
 
 Reboot | minValue | maxValue | increment | default | unit | Read-Only
@@ -55845,7 +55827,7 @@ Reboot | minValue | maxValue | increment | default | unit | Read-Only
 
 ### IMU_GYRO_NF0_BW (`FLOAT`) {#IMU_GYRO_NF0_BW}
 
-Notch filter bandwidth for gyro.
+Notch filter 0 bandwidth for gyro.
 
 The frequency width of the stop band for the 2nd order notch filter on the primary gyro.
 See "IMU_GYRO_NF0_FRQ" to activate the filter and to set the notch frequency.
@@ -55862,7 +55844,7 @@ Reboot | minValue | maxValue | increment | default | unit | Read-Only
 
 ### IMU_GYRO_NF0_FRQ (`FLOAT`) {#IMU_GYRO_NF0_FRQ}
 
-Notch filter frequency for gyro.
+Notch filter 0 frequency for gyro.
 
 The center frequency for the 2nd order notch filter on the primary gyro.
 This filter can be enabled to avoid feedback amplification of structural resonances at a specific frequency.
@@ -55900,7 +55882,7 @@ Reboot | minValue | maxValue | increment | default | unit | Read-Only
 
 ### IMU_GYRO_NF1_FRQ (`FLOAT`) {#IMU_GYRO_NF1_FRQ}
 
-Notch filter 2 frequency for gyro.
+Notch filter 1 frequency for gyro.
 
 The center frequency for the 2nd order notch filter on the primary gyro.
 This filter can be enabled to avoid feedback amplification of structural resonances at a specific frequency.
@@ -59837,14 +59819,15 @@ Models differ in range and FoV.
 
 **Values:**
 
-- `1`: TFMINI
+- `1`: TFMINI / TFMINI-S
 - `2`: ISTRA24
 - `3`: ISTRA24_100m
+- `4`: TFMINI Plus
 
 
 Reboot | minValue | maxValue | increment | default | unit | Read-Only
 --- | --- | --- | --- | --- | --- | ---
-&check; | 1 | 3 |  | 1 |  | &nbsp;
+&check; | 1 | 4 |  | 1 |  | &nbsp;
 
 </div>
 
