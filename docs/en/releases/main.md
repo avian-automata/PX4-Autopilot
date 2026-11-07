@@ -63,6 +63,18 @@ Please continue reading for [upgrade instructions](#upgrade-guide).
   This also applies to `MAV_CMD_DO_LAND_START`, which uses it internally.
   Ground stations and scripts that relied on the command to arm must send `MAV_CMD_COMPONENT_ARM_DISARM` separately (QGroundControl, MAVSDK and the PX4 ROS 2 Interface Library already do).
   See the [MAVLink spec clarification](https://github.com/mavlink/mavlink/pull/2648).
+- **Multicopters stop waiting for a waypoint heading after a timeout.**
+  [MIS_YAW_TMT](../advanced_config/parameter_reference.md#MIS_YAW_TMT) now defaults to `10` instead of `-1` and is counted from when the heading is commanded instead of from when the waypoint is reached.
+  A multicopter that cannot reach a waypoint heading in time, in a mission or in Return mode, continues without it instead of hovering indefinitely.
+  If a mission requires the heading, the mission fails and the vehicle returns.
+  The meaning of parameter values changes:
+  - Multicopters with `MIS_YAW_TMT` set above `0` used to skip all headings that the mission does not require. They now wait for them for up to `MIS_YAW_TMT`.
+  - VTOL vehicles in multicopter mode now always skip headings that the mission does not require, even with `MIS_YAW_TMT` set to `-1`.
+  - `MIS_YAW_TMT` set to `0` used to wait indefinitely, like `-1`. It now means not to wait.
+  - Set `MIS_YAW_TMT` to `-1` to keep waiting indefinitely for headings that are awaited.
+
+  See [Mission Mode > Waypoint Heading Timeout](../flight_modes_mc/mission.md#waypoint-heading-timeout).
+
 - **Plans are transferred only with the integer mission messages.**
   PX4 requests and sends plan items with `MISSION_REQUEST_INT` and `MISSION_ITEM_INT` only, and no longer reports `MAV_PROTOCOL_CAPABILITY_MISSION_FLOAT`.
   The deprecated `MISSION_REQUEST` is answered with `MISSION_ITEM_INT`, as the [MAVLink mission protocol](https://mavlink.io/en/services/mission.html) asks, and an upload that sends the deprecated `MISSION_ITEM` is rejected with `MAV_MISSION_UNSUPPORTED`.
@@ -98,6 +110,7 @@ Please continue reading for [upgrade instructions](#upgrade-guide).
   ([PX4-Autopilot#28782: feat(tools): add mavlink_serial_bridge.py reference bridge application](https://github.com/PX4/PX4-Autopilot/pull/28782))
 - [Agam FloRange](../dronecan/agam_florange.md): new DroneCAN optical flow, distance sensor and IMU module (PAA3905, AFBR-S50LV85D, ICM-42688-P). ([PX4-Autopilot#28901](https://github.com/PX4/PX4-Autopilot/pull/28901))
 - [Agam Autopilot v6X-RT](../flight_controller/agam_v6xrt.md): new FMUv6X-RT flight controller (NXP i.MX RT1176) with triple-redundant IMUs and 100BASE-T1 Ethernet. ([PX4-Autopilot#28285](https://github.com/PX4/PX4-Autopilot/pull/28285))
+- [NXP MR-NavQ95](../flight_controller/nxp_mr_navq95.md): new i.MX 95 flight controller with PX4 on the Cortex-M7 core and Linux on the Cortex-A55 cores. ([PX4-Autopilot#29055](https://github.com/PX4/PX4-Autopilot/pull/29055))
 
 ### Common
 
